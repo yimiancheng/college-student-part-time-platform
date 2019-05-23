@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlut.platform.dao.SysProductTypesDao">
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.SysProductTypes">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+        <result column="creator_user_id" property="creatorUserId" jdbcType="INTEGER"/>
+        <result column="order_no" property="orderNo" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, type_name, creator_user_id, order_no, create_date, update_date
+    </sql>
+
+    <select id="selectProductTypeById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_product_typs
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="select2ProductTypes" resultType="java.util.HashMap">
+        select
+        id,
+        type_name as text
+        from sys_product_typs
+        order by order_no desc, id
+    </select>
+
+    <select id="selectProductTypes" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_product_typs
+        order by order_no desc, id
+    </select>
+
+    <insert id="insertProductType" parameterType="com.dlut.platform.domain.SysProductTypes">
+        insert into sys_product_typs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">
+                type_name,
+            </if>
+            <if test="creatorUserId != null">
+                creator_user_id,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">
+                #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorUserId != null">
+                #{creatorUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProductType" parameterType="com.dlut.platform.domain.SysProductTypes">
+        update sys_product_typs
+        <set>
+            <if test="typeName != null">
+                type_name = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorUserId != null">
+                creator_user_id = #{creatorUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=INTEGER},
+            </if>
+            update_date = NOW(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from sys_product_typs
+        where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

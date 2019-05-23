@@ -1,0 +1,24 @@
+<!-- page specific plugin scripts -->
+<script src="${ctx}/ace_static/assets/js/bootstrap.min.js"></script>
+<script src="${ctx}/ace_static/assets/js/moment.min.js"></script>
+<script src="${ctx}/ace_static/assets/js/daterangepicker.min.js"></script>
+<script src="${ctx}/ace_static/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="${ctx}/ace_static/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${ctx}/ace_static/bootstrap-table/editable/bootstrap-editable.min.js"></script>
+<script src="${ctx}/ace_static/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="${ctx}/ace_static/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="${ctx}/ace_static/bootstrap-table/page-jump/bootstrap-table-pagejump.js"></script>
+<script src="${ctx}/ace_static/bootstrap-table/editable/bootstrap-table-editable.min.js"></script>
+<script src="${ctx}/ace_static/assets/js/moment.min.js"></script>
+<script src="${ctx}/ace_static/bootstrap-dialog/bootstrap-dialog.min.js"></script>
+<script src="${ctx}/ace_static/plugin/loadsh/loadsh-4.17.5.min.js"></script>
+<script src="${ctx}/ace_static/select2/js/select2.min.js"></script>
+<script src="${ctx}/ace_static/select2/js/i18n/zh-CN.js"></script>
+
+<!-- ace scripts -->
+<script src="${ctx}/ace_static/assets/js/ace-elements.min.js"></script>
+<script src="${ctx}/ace_static/assets/js/ace.min.js"></script>
+
+<script src="${ctx}/ace_static/customer/common/dialog_util.js"></script>
+<script src="${ctx}/ace_static/customer/common/init_modules.js"></script>
+<script src="${ctx}/ace_static/customer/common/load_sub_table.js"></script>

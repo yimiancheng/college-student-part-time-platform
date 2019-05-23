@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.platform.dao.SysProductLikeDao">
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.SysProductLike">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="sku_status" jdbcType="VARCHAR" property="skuStatus"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, sku_id, sku_name, user_id, sku_status, create_date, update_date
+    </sql>
+
+    <insert id="addProductLikeSku" parameterType="com.dlut.platform.domain.SysProductLike">
+        insert into sys_product_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="skuId != null">
+                sku_id,
+            </if>
+            <if test="skuName != null">
+                sku_name,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="skuStatus != null">
+                sku_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="skuId != null">
+                #{skuId,jdbcType=INTEGER},
+            </if>
+            <if test="skuName != null">
+                #{skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="skuStatus != null">
+                #{skuStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProductLikeSku" parameterType="com.dlut.platform.domain.SysProductLike">
+        update sys_product_like
+        <set>
+            <if test="skuId != null">
+                sku_id = #{skuId,jdbcType=INTEGER},
+            </if>
+            <if test="skuName != null">
+                sku_name = #{skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="skuStatus != null">
+                sku_status = #{skuStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            update_date = NOW(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectProductLikeList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from sys_product_like
+        <where>
+            <if test="skuStatus != null">
+                AND sku_status = #{skuStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler}
+            </if>
+            <if test="selectUserId != null and selectUserId > 0">
+                AND user_id = #{selectUserId,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by id desc
+    </select>
+</mapper>

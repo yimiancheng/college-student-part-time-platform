@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlut.platform.dao.SysProductDao">
+    <resultMap id="BaseResultMap_base" type="com.dlut.platform.domain.SysProduct">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="sku_type_id" property="skuTypeId" jdbcType="INTEGER"/>
+        <result column="sku_name" property="skuName" jdbcType="VARCHAR"/>
+        <result column="sku_img" property="skuImg" jdbcType="VARCHAR"/>
+        <result column="trade_position" property="tradePosition" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="CreatorName" property="creatorname" jdbcType="VARCHAR"/>
+        <result column="sku_status" property="skuStatus" jdbcType="VARCHAR"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+        <result column="sku_attr" property="skuAttr" jdbcType="TINYINT"/>
+        <result column="daofou" property="daofou" jdbcType="BIT"/>
+        <result column="buy_date" property="buyDate" jdbcType="TIMESTAMP"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="sku_content" property="skuContent" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.SysProduct" extends="BaseResultMap_base">
+        <association property="productStock" column="id"
+                     select="com.dlut.platform.dao.SysProductStockDao.selectSkuStock"
+                     javaType="com.dlut.platform.domain.SysProductStock"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_id, sku_type_id, sku_name, sku_img, trade_position, price, CreatorName,
+    sku_status, daofou, create_date, update_date, sku_content, sku_attr, buy_date
+    </sql>
+
+    <!--&lt;(<) &gt;(>)-->
+    <select id="selectBaseProductsByType" parameterType="java.lang.Integer" resultMap="BaseResultMap_base">
+    SELECT
+        sku.id,
+        sku.sku_name,
+        sku.price,
+        sku.sku_img,
+        sku.sku_content,
+        sku.sku_attr,
+        sku.daofou
+    FROM
+	    sys_product sku
+    INNER JOIN sys_stock stock ON stock.sku_id = sku.id
+    WHERE
+	    sku.buy_date &lt;= now()
+        and sku.sku_status = '发布'
+        and (stock.num_stock is null or (stock.num - stock.num_stock) >0)
+        <if test="skuTypeId != null and skuTypeId > 0">
+            and sku.sku_type_id = #{skuTypeId,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="selectProducts" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_product
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectBaseProducts" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        id, user_id, sku_name, sku_img, buy_date, CreatorName, sku_status, price
+        from sys_product
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectProductName" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select
+        sku_name
+        from sys_product
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectProductsList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_product
+        <where>
+            <if test="selectUserId != null and selectUserId > 0">
+                AND user_id = #{selectUserId,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="insertProduct" parameterType="com.dlut.platform.domain.SysProduct"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into sys_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="skuTypeId != null">
+                sku_type_id,
+            </if>
+            <if test="skuName != null">
+                sku_name,
+            </if>
+            <if test="skuImg != null">
+                sku_img,
+            </if>
+            <if test="tradePosition != null">
+                trade_position,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="creatorname != null">
+                CreatorName,
+            </if>
+            <if test="skuStatus != null">
+                sku_status,
+            </if>
+            <if test="skuAttr != null">
+                sku_attr,
+            </if>
+            <if test="daofou != null">
+                daofou,
+            </if>
+            <if test="skuContent != null">
+                sku_content,
+            </if>
+            <if test="buyDate != null">
+                buy_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="skuTypeId != null">
+                #{skuTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="skuName != null">
+                #{skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="skuImg != null">
+                #{skuImg,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePosition != null">
+                #{tradePosition,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="creatorname != null">
+                #{creatorname,jdbcType=VARCHAR},
+            </if>
+            <if test="skuStatus != null">
+                #{skuStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="skuAttr != null">
+                #{skuAttr,jdbcType=TINYINT},
+            </if>
+            <if test="daofou != null">
+                #{daofou,jdbcType=BIT},
+            </if>
+            <if test="skuContent != null">
+                #{skuContent,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="buyDate != null">
+                #{buyDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProductById" parameterType="com.dlut.platform.domain.SysProduct">
+        update sys_product
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="skuTypeId != null">
+                sku_type_id = #{skuTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="skuName != null">
+                sku_name = #{skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="skuImg != null">
+                sku_img = #{skuImg,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePosition != null">
+                trade_position = #{tradePosition,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="creatorname != null">
+                CreatorName = #{creatorname,jdbcType=VARCHAR},
+            </if>
+            <if test="skuStatus != null">
+                sku_status = #{skuStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="skuAttr != null">
+                sku_attr = #{skuAttr,jdbcType=TINYINT},
+            </if>
+            <if test="daofou != null">
+                daofou = #{daofou,jdbcType=BIT},
+            </if>
+            update_date = NOW(),
+            <if test="skuContent != null">
+                sku_content = #{skuContent,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="buyDate != null">
+                buy_date = #{buyDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%7r] %6p - %C[%L] - %m \n"/>
+        </layout>
+        <!--过滤器设置输出的级别-->
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="levelMin" value="debug" />
+            <param name="levelMax" value="error" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+    </appender>
+
+    <appender name="FILE-DEBUG" class="org.apache.log4j.FileAppender">
+        <param name="Append" value="false"/>
+        <param name="file" value="d:/log/platform/platform-debug.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%7r] %6p - %C[%L] - %m \n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="debug"/>
+            <param name="LevelMax" value="ERROR "/>
+        </filter>
+    </appender>
+
+    <appender name="FILE-INFO" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="Append" value="true"/>
+        <param name="file" value="d:/log/platform/platform-info.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%7r] %6p - %C[%L] - %m \n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="INFO"/>
+            <param name="LevelMax" value="ERROR "/>
+        </filter>
+    </appender>
+
+    <appender name="FILE-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="Append" value="true"/>
+        <param name="file" value="d:/log/platform/platform-error.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%7r] %6p - %C[%L] - %m \n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="ERROR"/>
+            <param name="LevelMax" value="ERROR "/>
+        </filter>
+    </appender>
+    <logger name="errorLog" additivity="false">
+        <level value="error" />
+        <appender-ref ref="FILE-ERROR" />
+    </logger>
+    <logger name="infoLog" additivity="false">
+        <level value="info" />
+        <appender-ref ref="FILE-INFO"/>
+    </logger>
+
+    <root>
+        <level value="info"/>
+        <!--<appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="FILE-ERROR" />
+    </root>
+
+</log4j:configuration>

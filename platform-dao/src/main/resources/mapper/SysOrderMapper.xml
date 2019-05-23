@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlut.platform.dao.SysOrderDao">
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.SysOrder">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="sku_id" property="skuId" jdbcType="INTEGER"/>
+        <result column="sku_price" property="skuPrice" jdbcType="DOUBLE"/>
+        <result column="sku_num" property="skuNum" jdbcType="INTEGER"/>
+        <result column="sku_user_id" property="skuUserId" jdbcType="INTEGER"/>
+        <result column="order_price" property="orderPrice" jdbcType="DOUBLE"/>
+        <result column="buy_user_id" property="buyUserId" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="order_content" property="orderContent" jdbcType="LONGVARCHAR"/>
+
+        <association property="skuName" column="sku_id" javaType="java.lang.String"
+                     select="com.dlut.platform.dao.SysProductDao.selectProductName" />
+
+        <collection property="orderLogs" column="id"
+                    select="com.dlut.platform.dao.SysOrderLogDao.selectLatestOrderStatus"
+                    javaType="java.util.ArrayList" ofType="com.dlut.platform.domain.SysOrderLog"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap_myOrder" type="com.dlut.platform.domain.SysOrder" extends="BaseResultMap">
+        <association property="userVo" column="buy_user_id"
+                     javaType="com.dlut.platform.domain.UserVo"
+                     select="com.dlut.platform.dao.UserDao.selectOrderUserInfoById" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap_buyOrder" type="com.dlut.platform.domain.SysOrder" extends="BaseResultMap">
+        <association property="buyUserName" column="buy_user_id"
+                     javaType="java.lang.String"
+                     select="com.dlut.platform.dao.UserDao.selectUserNameById" />
+    </resultMap>
+
+    <resultMap id="BaseOrderResultMap" type="com.dlut.platform.domain.SysOrder">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="sku_id" jdbcType="INTEGER" property="skuId" />
+        <result column="sku_num" jdbcType="INTEGER" property="skuNum" />
+        <result column="buy_user_id" jdbcType="INTEGER" property="buyUserId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, sku_id, sku_price, sku_num, order_price, buy_user_id, create_date,order_content
+    </sql>
+
+    <select id="selectOrderById" parameterType="java.lang.Integer" resultMap="BaseOrderResultMap">
+        select
+        id, sku_id, sku_num, buy_user_id
+        from sys_order
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertOrder" parameterType="com.dlut.platform.domain.SysOrder" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into sys_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="skuId != null">
+                sku_id,
+            </if>
+            <if test="skuPrice != null">
+                sku_price,
+            </if>
+            <if test="skuNum != null">
+                sku_num,
+            </if>
+            <if test="orderPrice != null">
+                order_price,
+            </if>
+            <if test="buyUserId != null">
+                buy_user_id,
+            </if>
+            <if test="orderContent != null">
+                order_content,
+            </if>
+            <if test="skuUserId != null">
+                sku_user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="skuId != null">
+                #{skuId,jdbcType=INTEGER},
+            </if>
+            <if test="skuPrice != null">
+                #{skuPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="skuNum != null">
+                #{skuNum,jdbcType=INTEGER},
+            </if>
+            <if test="orderPrice != null">
+                #{orderPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="buyUserId != null">
+                #{buyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderContent != null">
+                #{orderContent,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="skuUserId != null">
+                #{skuUserId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectOrderList" resultMap="BaseResultMap_myOrder" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_order
+        <where>
+            <if test="selectUserId != null and selectUserId > 0">
+                AND buy_user_id = #{selectUserId,jdbcType=INTEGER}
+            </if>
+            <if test="minDate != null and minDate != ''">
+                <![CDATA[  AND DATE_FORMAT(create_date, '%Y-%m-%d') >=  DATE_FORMAT(#{minDate}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="maxDate != null and maxDate != ''">
+                <![CDATA[  AND DATE_FORMAT(create_date, '%Y-%m-%d') <= DATE_FORMAT(#{maxDate}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectBuyOrderList" resultMap="BaseResultMap_buyOrder" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_order
+        <where>
+            <if test="selectUserId != null and selectUserId > 0">
+                AND sku_user_id = #{selectUserId,jdbcType=INTEGER}
+            </if>
+            <if test="minDate != null and minDate != ''">
+                <![CDATA[  AND DATE_FORMAT(create_date, '%Y-%m-%d') >=  DATE_FORMAT(#{minDate}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="maxDate != null and maxDate != ''">
+                <![CDATA[  AND DATE_FORMAT(create_date, '%Y-%m-%d') <= DATE_FORMAT(#{maxDate}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+        order by id desc
+    </select>
+</mapper>

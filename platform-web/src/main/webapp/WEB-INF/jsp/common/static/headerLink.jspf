@@ -1,0 +1,36 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="icon" href="${ctx}/ace_static/img/favicon.ico" mce_href="${ctx}/ace_static/img/favicon.ico" type="image/x-icon" />
+
+<!-- bootstrap & fontawesome -->
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/bootstrap.min.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/daterangepicker.min.css"/>
+<link rel="stylesheet" href="${ctx}/ace_static/bootstrap-table/bootstrap-table.min.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/bootstrap-table/page-jump/bootstrap-table-pagejump.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/bootstrap-dialog/bootstrap-dialog.min.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/datetimepicker/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/select2/css/select2.min.css" />
+
+<link rel="stylesheet" href="${ctx}/ace_static/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+<!-- page specific plugin styles -->
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/jquery-ui.min.css" />
+<!-- text fonts -->
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/fonts.googleapis.com.css" />
+<!-- ace styles -->
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/ace-skins.min.css" />
+<link rel="stylesheet" href="${ctx}/ace_static/assets/css/ace-rtl.min.css" />
+
+<link rel="stylesheet" href="${ctx}/ace_static/customer/common/ssp.css" />
+<!-- ace settings handler -->
+<script src="${ctx}/ace_static/assets/js/ace-extra.min.js"></script>
+<script src="${ctx}/ace_static/assets/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+    if('ontouchstart' in document.documentElement) document.write("<script src='${ctx}/ace_static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+
+
+    window.onload = function(){
+        if(typeof activeLeftMenu != 'undefined' && typeof activeLeftMenu === "function") {
+            activeLeftMenu(window.location.pathname);
+        }
+    };
+</script>

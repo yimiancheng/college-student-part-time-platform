@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:trx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    <!--统一的dataSource-->
+    <bean id="dynamicDataSource" class="com.dlut.platform.dao.util.DynamicDataSource" >
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <!--通过不同的key决定用哪个dataSource-->
+                <entry value-ref="dataSource-def" key="dataSource-def"/>
+            </map>
+        </property>
+        <!--设置默认的dataSource-->
+        <property name="defaultTargetDataSource" ref="dataSource-def">
+        </property>
+    </bean>
+
+    <!-- 事务管理 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource"/>
+    </bean>
+
+    <trx:annotation-driven transaction-manager="txManager"/>
+
+    <bean id="dataSource-def" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="filters" value="stat"/>
+        <property name="maxActive" value="2500"/>
+        <property name="initialSize" value="20"/>
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxOpenPreparedStatements" value="2000"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dynamicDataSource"/>
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml"/>
+    </bean>
+
+    <!--配置一个可以进行批量执行的sqlSession  -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+        <constructor-arg name="executorType" value="BATCH"></constructor-arg>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" lazy-init="true">
+        <property name="basePackage" value="com.dlut.platform.**.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+</beans>

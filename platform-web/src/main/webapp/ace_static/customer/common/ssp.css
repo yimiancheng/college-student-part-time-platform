@@ -1,0 +1,32 @@
+.select {
+    box-sizing: border-box;
+    height: 32px;
+    padding: 0 0.5em;
+    border: 1px solid #888;
+    border-radius: 3px;
+    /*font: 12px/1.5 Tahoma,Arial,sans-serif;*/
+}
+
+.bootstrap-dialog .modal-header.bootstrap-dialog-draggable {
+    cursor: move;
+}
+
+.pointerSpan {
+    cursor: pointer;
+}
+
+.my_btn {
+    background: #0062c8!important;
+}
+
+#subTableDialog tr>td, #subTableDialog tr>th {
+    border: 0px;
+    border-bottom: 1px solid #ddd
+}
+
+.middle_div {
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}

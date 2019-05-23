@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.platform.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.UserVo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="usernick" jdbcType="VARCHAR" property="usernick"/>
+        <result column="userrole" jdbcType="VARCHAR" property="userrole"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+        <result column="userstate" jdbcType="VARCHAR" property="userstate"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+
+        <result column="wxid" jdbcType="VARCHAR" property="wxid" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="user_img" jdbcType="VARCHAR" property="userImg" />
+        <result column="user_content" jdbcType="LONGVARCHAR" property="userContent" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, username, usernick, password, userrole, userstate, wxid, phone, user_img,user_content
+    </sql>
+
+    <sql id="Order_Base_Column_List">
+        id, username, usernick, wxid, phone, user_img,user_content
+    </sql>
+
+    <select id="selectOrderUserInfoById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Order_Base_Column_List"/>
+        from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectUserNameById" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select username from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectUser" parameterType="com.dlut.platform.domain.UserVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        <where>
+            <if test="username != null and username.length() > 0">
+                AND username = #{username}
+            </if>
+            <if test="password != null and password.length() > 0">
+                AND password = #{password}
+            </if>
+            <if test="id != null and id > 0">
+                AND id = #{id,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertUser" parameterType="com.dlut.platform.domain.UserVo">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="userrole != null">
+                userrole,
+            </if>
+            <if test="userstate != null">
+                userstate,
+            </if>
+            <if test="usernick != null">
+                usernick,
+            </if>
+            <if test="wxid != null">
+                wxid,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="userImg != null">
+                user_img,
+            </if>
+            <if test="userContent != null">
+                user_content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userrole != null">
+                #{userrole,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="userstate != null">
+                #{userstate,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="usernick != null">
+                #{usernick,jdbcType=VARCHAR},
+            </if>
+            <if test="wxid != null">
+                #{wxid,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userImg != null">
+                #{userImg,jdbcType=VARCHAR},
+            </if>
+            <if test="userContent != null">
+                #{userContent,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.dlut.platform.domain.UserVo">
+        update sys_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userrole != null">
+                userrole = #{userrole,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="userstate != null">
+                userstate = #{userstate,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="usernick != null">
+                usernick = #{usernick,jdbcType=VARCHAR},
+            </if>
+            <if test="wxid != null">
+                wxid = #{wxid,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userImg != null">
+                user_img = #{userImg,jdbcType=VARCHAR},
+            </if>
+            <if test="userContent != null">
+                user_content = #{userContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectUserList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        <where>
+            <if test="username != null and username.length() > 0">
+                AND username like CONCAT('%', #{username},'%')
+            </if>
+            <if test="userrole != null">
+                AND userrole = #{userrole,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler}
+            </if>
+            <if test="userstate != null">
+                AND userstate = #{userstate,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserListSize" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(id)
+        from sys_user
+        <where>
+            <if test="username != null and username.length() > 0">
+                AND username like CONCAT('%', #{username},'%')
+            </if>
+            <if test="userrole != null">
+                AND userrole = #{userrole,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler}
+            </if>
+            <if test="userstate != null">
+                AND userstate = #{userstate,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.platform.dao.SysOrderLogDao">
+    <resultMap id="BaseResultMap" type="com.dlut.platform.domain.SysOrderLog">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="order_status_old" jdbcType="VARCHAR" property="orderStatusOld"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+        <result column="order_status" jdbcType="VARCHAR" property="orderStatus"
+                typeHandler="com.dlut.platform.dao.util.EnumHandler"/>
+        <result column="creator_id" jdbcType="INTEGER" property="creatorId"/>
+        <result column="creator_name" jdbcType="VARCHAR" property="creatorName"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, order_id, order_status_old, order_status, creator_id, creator_name, create_date
+    </sql>
+
+    <select id="selectOrderStatusTimeLine" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_order_log
+        where order_id = #{id,jdbcType=INTEGER}
+        order by id desc
+    </select>
+
+    <select id="selectLatestOrderStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_order_log
+        where order_id = #{id,jdbcType=INTEGER}
+        order by id desc
+        limit 1
+    </select>
+
+    <insert id="addOrderLog" parameterType="com.dlut.platform.domain.SysOrderLog">
+        insert into sys_order_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="orderStatusOld != null">
+                order_status_old,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="creatorName != null">
+                creator_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="orderStatusOld != null">
+                #{orderStatusOld,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=VARCHAR,typeHandler=com.dlut.platform.dao.util.EnumHandler},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=INTEGER},
+            </if>
+            <if test="creatorName != null">
+                #{creatorName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>
