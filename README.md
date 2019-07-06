@@ -12,7 +12,7 @@ demo
 
 [项目搭建](https://github.com/yimiancheng/college-student-part-time-platform#项目搭建)
 
-[项目后台结构](https://github.com/yimiancheng/college-student-part-time-platform#项目页面展示)
+[项目后台结构](https://github.com/yimiancheng/college-student-part-time-platform#项目后台结构)
 
 #### 项目页面展示
 
