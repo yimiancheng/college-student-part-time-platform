@@ -39,7 +39,7 @@ demo
 >
 > 使用maven管理项目
 >
-> 项目默认两个用户：chengshaohua1 / admin，密码都是1
+> 项目默认用户： admin，密码是1
 
 #### 项目后台结构
 
