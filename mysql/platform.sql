@@ -237,5 +237,5 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', '管理员', 'admin', '72255c614de9471b379a477ec5062d1e', '系统管理员', '正常', 'wxid', '18610839846', null, '个性签名', '2019-05-12 16:28:25', '2019-05-12 16:28:25');
-INSERT INTO `sys_user` VALUES ('2', '华子', 'chengshaohua1', 'a98c4aa65fe6b35991c2d309cab870fd', '学生', '正常', 'wxid', '18610839846', 'https://www.youzixy.com/Public/images/icon/pleaselogin.png', 'go go', '2019-05-12 16:40:56', '2019-05-12 16:40:56');
+INSERT INTO `sys_user` VALUES ('1', '管理员', 'admin', '72255c614de9471b379a477ec5062d1e', '系统管理员', '正常', 'wxid', '18688888888', null, '个性签名', '2019-05-12 16:28:25', '2019-05-12 16:28:25');
+INSERT INTO `sys_user` VALUES ('2', '华子', '*', '*', '学生', '正常', 'wxid', '18688888888', 'https://www.youzixy.com/Public/images/icon/pleaselogin.png', 'go go', '2019-05-12 16:40:56', '2019-05-12 16:40:56');
